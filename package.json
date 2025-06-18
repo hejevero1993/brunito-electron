@@ -1,0 +1,24 @@
+{
+    "name": "brunito-electron",
+    "version": "1.0.0",
+    "description": "Electron test",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hejevero1993/brunito-electron.git"
+    },
+    "author": "Helmo Velásquez",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/hejevero1993/brunito-electron/issues"
+    },
+    "homepage": "https://github.com/hejevero1993/brunito-electron#readme",
+    "devDependencies": {
+        "electron": "^36.4.0"
+    }
+}
+
