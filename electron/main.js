@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 
 /******************************************************************************************************
  * Global constant | DEV:HV|
@@ -18,7 +18,7 @@ const createWindow = () => {
         minWidth: 800,
         minHeight: 600,
         webPreferences: {
-            preload: path.join(__dirname, "preload.js"),
+            preload: pathToFileURL(path.join(__dirname, "preload.js")).href,
             contextIsolation: true,
             nodeIntegration: false,
         },
