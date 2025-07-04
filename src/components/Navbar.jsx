@@ -2,52 +2,64 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
     return (
-        <nav className="navbar navbar-expand-lg bg-body-tertiary">
-            <div className="container-fluid">
-                <Link className="navbar-brand" to="/">
-                    BrunOS
-                </Link>
+        <nav className="main-header navbar navbar-expand navbar-white navbar-light">
+            <ul className="navbar-nav">
+                <li className="nav-item">
+                    <Link className="nav-link" data-widget="pushmenu" to="#" role="button">
+                        <i className="fas fa-bars"></i>
+                    </Link>
+                </li>
 
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
+                <li className="nav-item d-none d-sm-inline-block">
+                    <Link to="/" className="nav-link">
+                        Inicio
+                    </Link>
+                </li>
 
-                <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li className="navbar-item">
-                            <Link className="nav-link" to="/">
-                                Inicio
-                            </Link>
-                        </li>
+                <li className="nav-item d-none d-sm-inline-block">
+                    <Link to="/contact" className="nav-link">
+                        Contactanos
+                    </Link>
+                </li>
+            </ul>
 
-                        <li className="navbar-item">
-                            <Link className="nav-link" to="/about">
-                                Acerca de
-                            </Link>
-                        </li>
+            <ul className="navbar-nav ml-auto">
+                <li className="nav-item">
+                    <Link className="nav-link" data-widget="navbar-search" href="#" role="button">
+                        <i className="fas fa-search"></i>
+                    </Link>
 
-                        <li className="navbar-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Usuario
-                            </a>
+                    <div className="navbar-search-block">
+                        <form className="form-inline">
+                            <div className="input-group input-group-sm">
+                                <input className="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" />
 
-                            <ul className="dropdown-menu">
-                                <li>
-                                    <Link className="dropdown-item" to="/login">
-                                        Iniciar sesión
-                                    </Link>
-                                </li>
+                                <div className="input-group-append">
+                                    <button className="btn btn-navbar" type="submit">
+                                        <i className="fas fa-search"></i>
+                                    </button>
 
-                                <li>
-                                    <Link className="dropdown-item" to="/register">
-                                        Registrarse
-                                    </Link>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                                    <button className="btn btn-navbar" type="button" data-widget="navbar-search">
+                                        <i className="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+                        <i class="fas fa-th-large"></i>
+                    </a>
+                </li>
+            </ul>
         </nav>
     );
 }

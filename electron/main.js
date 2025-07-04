@@ -1,6 +1,7 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
-import { fileURLToPath, pathToFileURL } from "url";
+import { fileURLToPath } from "url";
+import axios from "axios";
 
 /******************************************************************************************************
  * Global constant | DEV:HV|
@@ -18,9 +19,10 @@ const createWindow = () => {
         minWidth: 800,
         minHeight: 600,
         webPreferences: {
-            preload: pathToFileURL(path.join(__dirname, "preload.js")).href,
+            preload: path.join(__dirname, "preload.js"),
+            enableRemoteModule: true,
             contextIsolation: true,
-            nodeIntegration: false,
+            nodeIntegration: true,
         },
     });
 
@@ -63,3 +65,55 @@ app.on("window-all-closed", () => {
         app.quit();
     }
 });
+
+/******************************************************************************************************
+ * Front functions communication | DEV:HV|
+ ******************************************************************************************************/
+ipcMain.handle("login:send", async (event, data) => {
+    console.log("Login received", data);
+
+    const response = await login(data);
+
+    return response;
+});
+
+/******************************************************************************************************
+ * Init axio librarie used to connect to api | DEV:HV|
+ ******************************************************************************************************/
+const api = axios.create({
+    baseURL: process.env.API_URL || "http://127.0.0.1:8000",
+    timeout: 5000,
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
+
+const apiSecure = axios.create({
+    baseURL: process.env.API_URL || "http://127.0.0.1:8000",
+    timeout: 5000,
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
+
+const login = async (data) => {
+    try {
+        const res = await api.post("/api/login", data);
+
+        return {
+            success: true,
+            data: {
+                token: res.data.token,
+            },
+        };
+    } catch (err) {
+        return {
+            success: false,
+            error: {
+                status: err.response?.status || 500,
+                statusText: err.response?.statusText || "Error de red",
+                errors: err.response?.data?.errors || null,
+            },
+        };
+    }
+};
