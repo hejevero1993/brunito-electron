@@ -1,25 +1,55 @@
-import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+
 import Home from "./views/Home";
 import About from "./views/About";
 import Login from "./views/Login";
 import Register from "./views/Register";
 import Dashboard from "./views/Dashboard";
 
+import Preloader from "./components/Preloader";
 import Navbar from "./components/Navbar";
 import Aside from "./components/Aside";
+import ContentHeader from "./components/ContentHeader";
+import Footer from "./components/Footer";
+import AsideRight from "./components/AsideRight";
 
 function AppContent() {
+    const navigate = useNavigate();
     const location = useLocation();
-    const hideNavbar = location.pathname === "/login" || location.pathname === "/register";
+    const authRoute = location.pathname === "/login" || location.pathname === "/register";
 
-    if (hideNavbar) {
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        console.log(window.api);
+        const savedUser = window.api.getUser();
+
+        if (savedUser) {
+            setUser(savedUser);
+        }
+    }, []);
+
+    const handleLogin = (userData) => {
+        window.api.saveUser(userData);
+        setUser(userData);
+    };
+
+    const handleLogout = () => {
+        window.api.clearUser();
+        setUser(null);
+    };
+
+    if (authRoute) {
+        if (user) {
+            navigate("/");
+        }
+
         return (
             <>
                 <div className="hold-transition login-page">
                     <Routes>
                         <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                     </Routes>
@@ -30,17 +60,31 @@ function AppContent() {
         return (
             <>
                 <div className="wrapper">
+                    <Preloader />
+
                     <Navbar />
 
                     <Aside />
 
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/contact" element={<Home />} />
-                    </Routes>
+                    <div className="content-wrapper">
+                        <ContentHeader />
+
+                        <div className="content">
+                            <div className="container-fluid">
+                                <Routes>
+                                    <Route path="/" element={<Home />} />
+                                    <Route path="/about" element={<About />} />
+                                    <Route path="/login" element={<Login />} />
+                                    <Route path="/register" element={<Register />} />
+                                    <Route path="/contact" element={<Home />} />
+                                </Routes>
+                            </div>
+                        </div>
+                    </div>
+
+                    <Footer />
+
+                    <AsideRight />
                 </div>
             </>
         );
@@ -48,10 +92,6 @@ function AppContent() {
 }
 
 function App() {
-    // useEffect(() => {
-    //     console.log(window.env);
-    // }, []);
-
     return (
         <Router>
             <AppContent />

@@ -48,15 +48,15 @@ export default function Navbar() {
                     </div>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                        <i class="fas fa-expand-arrows-alt"></i>
+                <li className="nav-item">
+                    <a className="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i className="fas fa-expand-arrows-alt"></i>
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
-                        <i class="fas fa-th-large"></i>
+                <li className="nav-item">
+                    <a className="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+                        <i className="fas fa-th-large"></i>
                     </a>
                 </li>
             </ul>

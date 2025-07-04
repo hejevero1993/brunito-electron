@@ -14,7 +14,7 @@ export default function Login() {
 
         const data = { email, password, remember };
 
-        const response = await window.api.sendForm(data);
+        const response = await window.api.sendLoginForm(data);
 
         if (response.success) {
             localStorage.setItem("token", response.data.token);
