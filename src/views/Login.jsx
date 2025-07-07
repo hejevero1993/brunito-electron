@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-export default function Login() {
+export default function Login({ onLoginSuccess }) {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [remember, setRemember] = useState(false);
     const [errors, setErrors] = useState({});
 
-    const login = async (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
 
         const data = { email, password, remember };
@@ -17,7 +17,13 @@ export default function Login() {
         const response = await window.api.sendLoginForm(data);
 
         if (response.success) {
-            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("auth", response.data.token);
+            window.api.setData("auth", {
+                loggedIn: true,
+                token: response.data.token,
+            });
+
+            onLoginSuccess();
 
             navigate("/");
         } else {
@@ -52,7 +58,7 @@ export default function Login() {
                 <div className="card-body login-card-body">
                     <p className="login-box-msg">Inicia sesión para comenzar tu sesión</p>
 
-                    <form onSubmit={login} method="post">
+                    <form onSubmit={handleLogin} method="post">
                         <div className="input-group mb-3">
                             <input type="email" className={`form-control ${errors.email ? "border border-danger" : ""}`} placeholder="Correo" value={email} onChange={(e) => setEmail(e.target.value)} />
 

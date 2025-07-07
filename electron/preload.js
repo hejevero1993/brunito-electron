@@ -1,9 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
-import Store from "electron-store";
 
 console.log("Preload.js is loaded...");
-
-const store = new Store();
 
 contextBridge.exposeInMainWorld("env", {
     nodeEnv: () => process.env.NODE_ENV,
@@ -15,7 +12,7 @@ contextBridge.exposeInMainWorld("env", {
 
 contextBridge.exposeInMainWorld("api", {
     sendLoginForm: (data) => ipcRenderer.invoke("login:send", data),
-    saveUser: (user) => store.set("user", user),
-    getUser: () => store.get("user"),
-    clearUser: () => store.delete("user"),
+    setData: (key, value) => ipcRenderer.invoke("data:set", key, value),
+    getData: (key) => ipcRenderer.invoke("data:get", key),
+    clearData: () => ipcRenderer.send("data:clear"),
 });

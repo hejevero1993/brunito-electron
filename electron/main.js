@@ -2,6 +2,9 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import { fileURLToPath } from "url";
 import axios from "axios";
+import Store from "electron-store";
+
+const store = new Store();
 
 /******************************************************************************************************
  * Global constant | DEV:HV|
@@ -76,6 +79,12 @@ ipcMain.handle("login:send", async (event, data) => {
 
     return response;
 });
+
+ipcMain.handle("data:get", (key) => store.get(key));
+
+ipcMain.on("data:set", (key, value) => store.set(key, value));
+
+ipcMain.on("data:clear", () => store.clear());
 
 /******************************************************************************************************
  * Init axio librarie used to connect to api | DEV:HV|

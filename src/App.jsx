@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
 
 import Home from "./views/Home";
 import About from "./views/About";
@@ -15,36 +15,33 @@ import Footer from "./components/Footer";
 import AsideRight from "./components/AsideRight";
 
 function AppContent() {
-    const navigate = useNavigate();
+    const redirectRoute = useNavigate();
     const location = useLocation();
     const authRoute = location.pathname === "/login" || location.pathname === "/register";
 
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        console.log(window.api);
-        const savedUser = window.api.getUser();
+        const loadApp = async () => {
+            const auth = await window.api.getData("auth");
+            setUser(auth || false);
+        };
 
-        if (savedUser) {
-            setUser(savedUser);
-        }
+        loadApp();
     }, []);
 
-    const handleLogin = (userData) => {
-        window.api.saveUser(userData);
-        setUser(userData);
-    };
+    useEffect(() => {
+        if (authRoute && user.length > 0) {
+            redirectRoute("/");
+        }
+    }, [user, authRoute, redirectRoute]);
 
-    const handleLogout = () => {
-        window.api.clearUser();
-        setUser(null);
+    const hanldleLogout = () => {
+        window.api.clearData();
+        setUser(false);
     };
 
     if (authRoute) {
-        if (user) {
-            navigate("/");
-        }
-
         return (
             <>
                 <div className="hold-transition login-page">
@@ -62,7 +59,7 @@ function AppContent() {
                 <div className="wrapper">
                     <Preloader />
 
-                    <Navbar />
+                    <Navbar user={user} />
 
                     <Aside />
 
@@ -72,9 +69,9 @@ function AppContent() {
                         <div className="content">
                             <div className="container-fluid">
                                 <Routes>
-                                    <Route path="/" element={<Home />} />
+                                    <Route path="/" element={<Home onLogout={hanldleLogout} />} />
                                     <Route path="/about" element={<About />} />
-                                    <Route path="/login" element={<Login />} />
+                                    <Route path="/login" element={<Login onLoginSuccess={() => setAuthenticated(true)} />} />
                                     <Route path="/register" element={<Register />} />
                                     <Route path="/contact" element={<Home />} />
                                 </Routes>
