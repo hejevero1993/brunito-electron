@@ -109,18 +109,14 @@ const login = async (data) => {
     try {
         const res = await api.post("/api/login", data);
 
-        return {
-            success: true,
-            data: {
-                token: res.data.token,
-            },
-        };
+        return res; //aqui esta el error, no se puede enviar directamente res//error
     } catch (err) {
         return {
             success: false,
+            status: err.response?.status || 500,
+            statusText: err.response?.statusText || "Network error!",
+            message: err.response?.data?.message || null,
             error: {
-                status: err.response?.status || 500,
-                statusText: err.response?.statusText || "Error de red",
                 errors: err.response?.data?.errors || null,
             },
         };

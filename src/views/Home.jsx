@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react";
 
 export default function Home({ user }) {
-    const [loading, setLoading] = useState(true);
-
     useEffect(() => {
+        const preloader = document.querySelector(".preloader");
+
         const timer = setTimeout(() => {
-            setLoading(false);
-        }, 5000);
+            if (preloader) {
+                preloader.classList.add("d-none");
+            }
+        }, 3000);
 
         return () => clearTimeout(timer);
     }, []);
-
-    if (loading) {
-        const preloader = document.querySelector(".preloader");
-        preloader.classList.remove("d-none");
-    }
 
     return <h2>Página de inicio {user?.email}</h2>;
 }

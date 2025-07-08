@@ -31,7 +31,7 @@ function AppContent() {
     }, []);
 
     useEffect(() => {
-        if (authRoute && user.length > 0) {
+        if (authRoute && user && user.length > 0) {
             redirectRoute("/");
         }
     }, [user, authRoute, redirectRoute]);
@@ -47,7 +47,7 @@ function AppContent() {
                 <div className="hold-transition login-page">
                     <Routes>
                         <Route path="/" element={<Home />} />
-                        <Route path="/login" element={<Login />} />
+                        <Route path="/login" element={<Login onLoginSuccess={() => setUser(true)} />} />
                         <Route path="/register" element={<Register />} />
                     </Routes>
                 </div>
@@ -71,7 +71,7 @@ function AppContent() {
                                 <Routes>
                                     <Route path="/" element={<Home onLogout={hanldleLogout} />} />
                                     <Route path="/about" element={<About />} />
-                                    <Route path="/login" element={<Login onLoginSuccess={() => setAuthenticated(true)} />} />
+                                    <Route path="/login" element={<Login onLoginSuccess={() => setUser(true)} />} />
                                     <Route path="/register" element={<Register />} />
                                     <Route path="/contact" element={<Home />} />
                                 </Routes>

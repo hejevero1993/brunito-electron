@@ -24467,22 +24467,18 @@ axios.create({
   }
 });
 const login = async (data) => {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e, _f;
   try {
     const res = await api.post("/api/login", data);
-    return {
-      success: true,
-      data: {
-        token: res.data.token
-      }
-    };
+    return res;
   } catch (err) {
     return {
       success: false,
+      status: ((_a = err.response) == null ? void 0 : _a.status) || 500,
+      statusText: ((_b = err.response) == null ? void 0 : _b.statusText) || "Network error!",
+      message: ((_d = (_c = err.response) == null ? void 0 : _c.data) == null ? void 0 : _d.message) || null,
       error: {
-        status: ((_a = err.response) == null ? void 0 : _a.status) || 500,
-        statusText: ((_b = err.response) == null ? void 0 : _b.statusText) || "Error de red",
-        errors: ((_d = (_c = err.response) == null ? void 0 : _c.data) == null ? void 0 : _d.errors) || null
+        errors: ((_f = (_e = err.response) == null ? void 0 : _e.data) == null ? void 0 : _f.errors) || null
       }
     };
   }

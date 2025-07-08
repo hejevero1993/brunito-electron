@@ -16,33 +16,42 @@ export default function Login({ onLoginSuccess }) {
 
         const response = await window.api.sendLoginForm(data);
 
-        if (response.success) {
-            localStorage.setItem("auth", response.data.token);
-            window.api.setData("auth", {
-                loggedIn: true,
-                token: response.data.token,
-            });
+        if (response) {
+            if (response.success) {
+                localStorage.setItem("auth", JSON.stringify({ data: response.data, token: response.token.plainText }));
 
-            onLoginSuccess();
+                window.api.setData("auth", {
+                    loggedIn: true,
+                    token: response.data.token,
+                });
 
-            navigate("/");
-        } else {
-            console.log(response);
-            if (response.error.status == 422) {
-                if (response.error.errors) {
-                    setErrors(response.error.errors);
+                onLoginSuccess();
+
+                //navigate("/");
+            } else {
+                if (response.status == 422) {
+                    if (response.error.errors) {
+                        setErrors(response.error.errors);
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: response.statusText,
+                            text: response.message,
+                        });
+                    }
                 } else {
                     Swal.fire({
                         icon: "error",
-                        title: response.error.statusText,
+                        title: response.statusText,
+                        text: response.message,
                     });
                 }
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: response.error.statusText,
-                });
             }
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Server connection error.",
+            });
         }
     };
 
