@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-export default function Login({ onLoginSuccess }) {
+export default function Login({ setAuth }) {
     const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -18,16 +18,15 @@ export default function Login({ onLoginSuccess }) {
 
         if (response) {
             if (response.success) {
-                localStorage.setItem("auth", JSON.stringify({ data: response.data, token: response.token.plainText }));
+                const session = { loggedIn: true, user: response.data.user, token: response.data.token.plainTextToken };
 
-                window.api.setData("auth", {
-                    loggedIn: true,
-                    token: response.data.token,
-                });
+                localStorage.setItem("auth", JSON.stringify(session));
 
-                onLoginSuccess();
+                window.api.setData("auth", session);
 
-                //navigate("/");
+                setAuth(session);
+
+                navigate("/");
             } else {
                 if (response.status == 422) {
                     if (response.error.errors) {

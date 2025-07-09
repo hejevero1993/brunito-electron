@@ -12,7 +12,8 @@ contextBridge.exposeInMainWorld("env", {
 
 contextBridge.exposeInMainWorld("api", {
     sendLoginForm: (data) => ipcRenderer.invoke("login:send", data),
+    sendRegisterForm: (data) => ipcRenderer.invoke("register:send", data),
     setData: (key, value) => ipcRenderer.invoke("data:set", key, value),
     getData: (key) => ipcRenderer.invoke("data:get", key),
-    clearData: () => ipcRenderer.send("data:clear"),
+    clearData: () => ipcRenderer.invoke("data:clear"),
 });

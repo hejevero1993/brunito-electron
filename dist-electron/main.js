@@ -24445,13 +24445,18 @@ app$1.on("window-all-closed", () => {
   }
 });
 ipcMain$1.handle("login:send", async (event, data) => {
-  console.log("Login received", data);
+  console.log("Login data", data);
   const response = await login(data);
   return response;
 });
-ipcMain$1.handle("data:get", (key) => store.get(key));
-ipcMain$1.on("data:set", (key, value) => store.set(key, value));
-ipcMain$1.on("data:clear", () => store.clear());
+ipcMain$1.handle("register:send", async (event, data) => {
+  console.log("Register data", data);
+  const response = await register(data);
+  return response;
+});
+ipcMain$1.handle("data:get", (event, key) => store.get(key));
+ipcMain$1.handle("data:set", (event, key, value) => store.set(key, value));
+ipcMain$1.handle("data:clear", () => store.clear());
 const api = axios.create({
   baseURL: process.env.API_URL || "http://127.0.0.1:8000",
   timeout: 5e3,
@@ -24467,18 +24472,49 @@ axios.create({
   }
 });
 const login = async (data) => {
-  var _a, _b, _c, _d, _e, _f;
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
   try {
     const res = await api.post("/api/login", data);
-    return res;
-  } catch (err) {
+    return {
+      status: res.status,
+      statusText: res.statusText,
+      success: ((_a = res.data) == null ? void 0 : _a.success) || false,
+      message: ((_b = res.data) == null ? void 0 : _b.message) || null,
+      ...((_c = res.data) == null ? void 0 : _c.errors) && { error: res.data.errors },
+      ...((_d = res.data) == null ? void 0 : _d.data) && { data: res.data.data }
+    };
+  } catch (error) {
     return {
       success: false,
-      status: ((_a = err.response) == null ? void 0 : _a.status) || 500,
-      statusText: ((_b = err.response) == null ? void 0 : _b.statusText) || "Network error!",
-      message: ((_d = (_c = err.response) == null ? void 0 : _c.data) == null ? void 0 : _d.message) || null,
+      status: ((_e = error.response) == null ? void 0 : _e.status) || 500,
+      statusText: ((_f = error.response) == null ? void 0 : _f.statusText) || "Network error!",
+      message: ((_h = (_g = error.response) == null ? void 0 : _g.data) == null ? void 0 : _h.message) || null,
       error: {
-        errors: ((_f = (_e = err.response) == null ? void 0 : _e.data) == null ? void 0 : _f.errors) || null
+        errors: ((_j = (_i = error.response) == null ? void 0 : _i.data) == null ? void 0 : _j.errors) || null
+      }
+    };
+  }
+};
+const register = async (data) => {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  try {
+    const res = await api.post("/api/register", data);
+    return {
+      status: res.status,
+      statusText: res.statusText,
+      success: ((_a = res.data) == null ? void 0 : _a.success) || false,
+      message: ((_b = res.data) == null ? void 0 : _b.message) || null,
+      ...((_c = res.data) == null ? void 0 : _c.errors) && { error: res.data.errors },
+      ...((_d = res.data) == null ? void 0 : _d.data) && { data: res.data.data }
+    };
+  } catch (error) {
+    return {
+      success: false,
+      status: ((_e = error.response) == null ? void 0 : _e.status) || 500,
+      statusText: ((_f = error.response) == null ? void 0 : _f.statusText) || "Network error!",
+      message: ((_h = (_g = error.response) == null ? void 0 : _g.data) == null ? void 0 : _h.message) || null,
+      error: {
+        errors: ((_j = (_i = error.response) == null ? void 0 : _i.data) == null ? void 0 : _j.errors) || null
       }
     };
   }

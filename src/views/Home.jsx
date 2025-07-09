@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-export default function Home({ user }) {
+export default function Home({ auth }) {
     useEffect(() => {
         const preloader = document.querySelector(".preloader");
 
@@ -13,5 +13,5 @@ export default function Home({ user }) {
         return () => clearTimeout(timer);
     }, []);
 
-    return <h2>Página de inicio {user?.email}</h2>;
+    return <h2>Página de inicio {auth?.user?.email}</h2>;
 }

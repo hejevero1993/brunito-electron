@@ -1,23 +1,6 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function Aside() {
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const data = await window.api.getData("auth");
-
-            if (data?.loggedIn) {
-                setUser(data.user);
-            } else {
-                setUser(null);
-            }
-        };
-
-        fetchUser();
-    }, []);
-
+export default function Aside({ auth, onLogout }) {
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
             <Link href="index3.html" className="brand-link">
@@ -33,8 +16,8 @@ export default function Aside() {
                     </div>
 
                     <div className="info">
-                        <Link to={user ? `/` : `/login`} className="d-block" id="username">
-                            {user ? user.name : `Iniciar sesión`}
+                        <Link to={auth ? `/` : `/login`} className="d-block" id="username">
+                            {auth ? auth.user.name : `Iniciar sesión`}
                         </Link>
                     </div>
                 </div>
@@ -82,6 +65,16 @@ export default function Aside() {
                                 </p>
                             </Link>
                         </li>
+
+                        {auth && (
+                            <li className="nav-item">
+                                <a className="nav-link" href="#" onClick={onLogout}>
+                                    <i className="nav-icon fas fa-times"></i>
+
+                                    <p>Cerrar sesión</p>
+                                </a>
+                            </li>
+                        )}
                     </ul>
                 </nav>
             </div>

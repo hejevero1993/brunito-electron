@@ -73,18 +73,26 @@ app.on("window-all-closed", () => {
  * Front functions communication | DEV:HV|
  ******************************************************************************************************/
 ipcMain.handle("login:send", async (event, data) => {
-    console.log("Login received", data);
+    console.log("Login data", data);
 
     const response = await login(data);
 
     return response;
 });
 
-ipcMain.handle("data:get", (key) => store.get(key));
+ipcMain.handle("register:send", async (event, data) => {
+    console.log("Register data", data);
 
-ipcMain.on("data:set", (key, value) => store.set(key, value));
+    const response = await register(data);
 
-ipcMain.on("data:clear", () => store.clear());
+    return response;
+});
+
+ipcMain.handle("data:get", (event, key) => store.get(key));
+
+ipcMain.handle("data:set", (event, key, value) => store.set(key, value));
+
+ipcMain.handle("data:clear", () => store.clear());
 
 /******************************************************************************************************
  * Init axio librarie used to connect to api | DEV:HV|
@@ -109,15 +117,47 @@ const login = async (data) => {
     try {
         const res = await api.post("/api/login", data);
 
-        return res; //aqui esta el error, no se puede enviar directamente res//error
-    } catch (err) {
+        return {
+            status: res.status,
+            statusText: res.statusText,
+            success: res.data?.success || false,
+            message: res.data?.message || null,
+            ...(res.data?.errors && { error: res.data.errors }),
+            ...(res.data?.data && { data: res.data.data }),
+        };
+    } catch (error) {
         return {
             success: false,
-            status: err.response?.status || 500,
-            statusText: err.response?.statusText || "Network error!",
-            message: err.response?.data?.message || null,
+            status: error.response?.status || 500,
+            statusText: error.response?.statusText || "Network error!",
+            message: error.response?.data?.message || null,
             error: {
-                errors: err.response?.data?.errors || null,
+                errors: error.response?.data?.errors || null,
+            },
+        };
+    }
+};
+
+const register = async (data) => {
+    try {
+        const res = await api.post("/api/register", data);
+
+        return {
+            status: res.status,
+            statusText: res.statusText,
+            success: res.data?.success || false,
+            message: res.data?.message || null,
+            ...(res.data?.errors && { error: res.data.errors }),
+            ...(res.data?.data && { data: res.data.data }),
+        };
+    } catch (error) {
+        return {
+            success: false,
+            status: error.response?.status || 500,
+            statusText: error.response?.statusText || "Network error!",
+            message: error.response?.data?.message || null,
+            error: {
+                errors: error.response?.data?.errors || null,
             },
         };
     }
