@@ -49,7 +49,7 @@ function AppContent() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login setAuth={setAuth} />} />
-                        <Route path="/register" element={<Register />} />
+                        <Route path="/register" element={<Register setAuth={setAuth} />} />
                     </Routes>
                 </div>
             </>
@@ -72,8 +72,8 @@ function AppContent() {
                                 <Routes>
                                     <Route path="/" element={<Home auth={auth} />} />
                                     <Route path="/about" element={<About />} />
-                                    <Route path="/login" element={<Login />} />
-                                    <Route path="/register" element={<Register />} />
+                                    <Route path="/login" element={<Login setAuth={setAuth} />} />
+                                    <Route path="/register" element={<Register setAuth={setAuth} />} />
                                     <Route path="/contact" element={<Home />} />
                                 </Routes>
                             </div>

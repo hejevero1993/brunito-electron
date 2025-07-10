@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-export default function Register() {
+export default function Register({ setAuth }) {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [password_confirmation, setConfirmPassword] = useState("");
     const [terms, setTerms] = useState(false);
     const [errors, setErrors] = useState({});
 
@@ -21,17 +21,31 @@ export default function Register() {
             return;
         }
 
-        const data = { name, email, password, confirmPassword };
+        const data = { name, email, password, password_confirmation };
 
         const response = await window.api.sendRegisterForm(data);
 
         if (response) {
             if (response.success) {
-                //
+                const session = { loggedIn: true, user: response.data.user, token: response.data.token.plainTextToken };
+
+                localStorage.setItem("auth", JSON.stringify(session));
+
+                window.api.setData("auth", session);
+
+                setAuth(session);
+
+                Swal.fire({
+                    icon: "success",
+                    title: "¡Felicidades!",
+                    text: "Felicidades su cuenta ha sido creada exitosamente",
+                });
+
+                navigate("/");
             } else {
                 if (response.status == 422) {
                     if (response.error.errors) {
-                        setErrors(response.error.erros);
+                        setErrors(response.error.errors);
                     } else {
                         Swal.fire({
                             icon: "error",
@@ -105,7 +119,7 @@ export default function Register() {
                         {errors.password && <div className="alert bg-danger rounded shadow">{errors.password}</div>}
 
                         <div className="input-group mb-3">
-                            <input type="password" className={`form-control ${errors.confirmPassword ? "border border-sanger" : ""}`} placeholder="Repetir contraseña" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                            <input type="password" className={`form-control ${errors.confirmPassword ? "border border-sanger" : ""}`} placeholder="Repetir contraseña" value={password_confirmation} onChange={(e) => setConfirmPassword(e.target.value)} />
 
                             <div className="input-group-append">
                                 <div className="input-group-text">
