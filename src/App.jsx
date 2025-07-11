@@ -6,6 +6,7 @@ import About from "./views/About";
 import Login from "./views/Login";
 import Register from "./views/Register";
 import Dashboard from "./views/Dashboard";
+import Profile from "./views/Profile";
 
 import Preloader from "./components/Preloader";
 import Navbar from "./components/Navbar";
@@ -17,9 +18,11 @@ import AsideRight from "./components/AsideRight";
 function AppContent() {
     const redirectRoute = useNavigate();
     const location = useLocation();
+    const route = location.pathname;
     const authRoute = location.pathname === "/login" || location.pathname === "/register";
 
     const [auth, setAuth] = useState(null);
+    const [title, setTitle] = useState(null);
 
     useEffect(() => {
         const loadApp = async () => {
@@ -60,12 +63,12 @@ function AppContent() {
                 <div className="wrapper">
                     <Preloader />
 
-                    <Navbar auth={auth} />
+                    <Navbar auth={auth} onLogout={handleLogout} />
 
-                    <Aside auth={auth} onLogout={handleLogout} />
+                    <Aside auth={auth} onLogout={handleLogout} route={route} />
 
                     <div className="content-wrapper">
-                        <ContentHeader />
+                        <ContentHeader title={title} />
 
                         <div className="content">
                             <div className="container-fluid">
@@ -75,6 +78,7 @@ function AppContent() {
                                     <Route path="/login" element={<Login setAuth={setAuth} />} />
                                     <Route path="/register" element={<Register setAuth={setAuth} />} />
                                     <Route path="/contact" element={<Home />} />
+                                    <Route path="/profile" element={<Profile setTitle={setTitle} />} />
                                 </Routes>
                             </div>
                         </div>

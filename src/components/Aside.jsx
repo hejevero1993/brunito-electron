@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function Aside({ auth, onLogout }) {
+export default function Aside({ auth, route, onLogout }) {
     return (
         <aside className="main-sidebar sidebar-dark-primary elevation-4">
             <Link href="index3.html" className="brand-link">
@@ -35,9 +35,9 @@ export default function Aside({ auth, onLogout }) {
 
                 <nav className="mt-2">
                     <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                        <li className="nav-item menu-open">
-                            <Link href="#" className="nav-link active">
-                                <i className="nav-icon fas fa-tachometer-alt"></i>
+                        <li className={`nav-item ${route == "/" ? "menu-open" : ""}`}>
+                            <Link href="#" className={`nav-link ${route == "/" ? "active" : ""}`}>
+                                <i className="nav-icon fas fa-home"></i>
 
                                 <p>
                                     Dashboard
@@ -47,7 +47,7 @@ export default function Aside({ auth, onLogout }) {
 
                             <ul className="nav nav-treeview">
                                 <li className="nav-item">
-                                    <Link href="./index.html" className="nav-link active">
+                                    <Link to="/" className={`nav-link ${route == "/" ? "active" : ""}`}>
                                         <i className="far fa-circle nav-icon"></i>
                                         <p>Inicio</p>
                                     </Link>
@@ -56,13 +56,10 @@ export default function Aside({ auth, onLogout }) {
                         </li>
 
                         <li className="nav-item">
-                            <Link href="pages/widgets.html" className="nav-link">
-                                <i className="nav-icon fas fa-th"></i>
+                            <Link to="/profile" className={`nav-link ${route == "/profile" ? "active" : ""}`}>
+                                <i className="nav-icon far fa-id-badge"></i>
 
-                                <p>
-                                    Widgets
-                                    <span className="right badge badge-danger">New</span>
-                                </p>
+                                <p>Perfil</p>
                             </Link>
                         </li>
 

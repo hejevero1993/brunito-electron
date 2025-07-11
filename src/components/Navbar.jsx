@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import moment from "moment";
 
-export default function Navbar() {
+export default function Navbar({ auth, onLogout }) {
     return (
         <nav className="main-header navbar navbar-expand navbar-white navbar-light">
             <ul className="navbar-nav">
@@ -58,6 +59,63 @@ export default function Navbar() {
                     <a className="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
                         <i className="fas fa-th-large"></i>
                     </a>
+                </li>
+
+                <li className="nav-item dropdown user-menu">
+                    <a href="#" className="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        <img src="/img/brand/logo-original.png" alt="User profile image" className="user-image rounded-circle shadow" />
+
+                        <span className="d-none d-md-inline">{auth?.user?.name ? auth.user.name : "Usuario Invitado"}</span>
+                    </a>
+
+                    {auth && (
+                        <ul className="dropdown-menu dropdown-menu-lg dropdown-menu-right rounded" data-popper="static">
+                            <li className="user-header bg-primary">
+                                <img src="/img/brand/logo-original.png" alt="BrunOS user logo" className="rounded-circle shadow" style={{ width: "100px", height: "100px" }} />
+
+                                <p>
+                                    Bienvenido {auth.user.name}
+                                    <small>Miembro desde {moment(auth.user.created_at).format("MM. YYYY")}</small>
+                                </p>
+                            </li>
+
+                            <li className="user-body border-bottom">
+                                <div className="row">
+                                    <div className="col-4 text-center">
+                                        <Link to="/">Perfil</Link>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li className="user-footer">
+                                <a href="" className="btn btn-default btn-float float-right" onClick={onLogout}>
+                                    Cerrar sesión
+                                </a>
+                            </li>
+                        </ul>
+                    )}
+
+                    {!auth && (
+                        <ul className="dropdown-menu dropdown-menu-lg dropdown-menu-right rounded" data-popper="static">
+                            <li className="user-header bg-secondary">
+                                <img src="/img/brand/logo-original.png" alt="BrunOS image logo" className="rounded-circle shadow" style={{ width: "100px", height: "100px" }} />
+
+                                <p>Bienvenido a BrunOS</p>
+                            </li>
+
+                            <li className="user-body">
+                                <div className="row">
+                                    <div className="col-6 text-center">
+                                        <Link to="/login">Iniciar sesión</Link>
+                                    </div>
+
+                                    <div className="col-6 text-center">
+                                        <Link to="/register">Registrarme</Link>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    )}
                 </li>
             </ul>
         </nav>
